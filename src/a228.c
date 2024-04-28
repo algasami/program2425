@@ -9,11 +9,13 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MODULO 1000000007U
+
 unsigned int n, m;
 unsigned int map[12][12];
-unsigned long long int combs[12][12][1 << 12];
+unsigned int combs[12][12][1 << 12];
 
-unsigned long long int solve()
+unsigned int solve()
 {
     memset(combs, 0, sizeof(combs));
 
@@ -33,9 +35,11 @@ unsigned long long int solve()
 
         for (size_t j = 1; j <= m; j++)
         {
-            // get plug locations in s (this part is confusing)
+            // get snake penetration in s (this part is confusing)
             size_t up = 1 << (j - 1);
-            size_t left = 1 << j;
+            size_t left = 1 << (j + 1 - 1);
+            // in the blog post, the bits are a 1-based array, but in real programming, it is 0-based
+            // combined with our 1-based array for i,j, we get a 1-off problem, so need to minus one.
             for (size_t s = 0; s < (size_t)(1 << (m + 1)); s++)
             {
                 if (map[i][j]) // safe, doesn't have outlet
@@ -48,7 +52,7 @@ unsigned long long int solve()
                     else if ((up & s) || (left & s))
                     {
                         // one of them up or left (exclusive or)
-                        combs[i][j][s] = combs[i][j - 1][s] + combs[i][j - 1][s ^ (up | left)];
+                        combs[i][j][s] = (combs[i][j - 1][s] + combs[i][j - 1][s ^ (up | left)]) % MODULO;
                         // s ^ (up | left)
                         // if the state has up, then we choose the state with left
                         // if the state has left, then we choose the state with up
@@ -80,7 +84,7 @@ unsigned long long int solve()
     }
     // final accumulation happens at combs[n][m][0]
 
-    return combs[n][m][0] % 1000000007;
+    return combs[n][m][0] % MODULO;
 }
 
 int main()
@@ -94,7 +98,7 @@ int main()
             for (size_t j = 1; j <= m; j++)
                 scanf("%u", &map[i][j]);
 
-        printf("Case %u: %llu\n", i, solve());
+        printf("Case %u: %u\n", i, solve());
     }
     return 0;
 }
