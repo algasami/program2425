@@ -4,3 +4,4 @@ project(Program2425)
 
 
 add_executable(a228 src/a228.c)
+add_executable(a250 src/a250.c)
