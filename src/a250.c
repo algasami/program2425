@@ -2,7 +2,9 @@
 
 // prefix sum (from i = 1)
 long long int sum[100001] = {0};
-long long int mods[100001] = {0};
+int mods[100001];
+// long long int increases modulo time by a magnitude
+// so use int since k is in the range of a 32-bit integer
 
 int solve()
 {
@@ -33,14 +35,14 @@ int solve()
     {
         for (size_t j = i + 1; j <= n; j++)
         {
-            if (mods[j] == mods[i])
+            if ((mods[j] - mods[i]) % k == 0) // (sum[j] - sum[i]) % k = (sum[j] % k - sum[i] % k) % k
             {
                 printf("%zu %zu\n", i + 1, j);
                 return 1;
             }
         }
     }
-    printf("no solutions\n");
+    printf("no solutions.\n");
     return 1;
 }
 
