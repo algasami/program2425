@@ -2,29 +2,28 @@
 #include <stdio.h>
 #include <string.h>
 
-#define min(a, b) (a > b) ? b : a
+#define min(a, b) ((a > b) ? b : a)
+#define max(a, b) ((a < b) ? b : a)
 
 unsigned int n;
-int hash[3001]; // hash[id] = exist or not
-int ids[1001];
-int adj[3001][3001]; // adj[id][id]
-unsigned int adjlist[1001][1002];
+int ids[1002];
+char adj[1002][1002];
+unsigned int adjlist[1002][1002];
 
-int gcd(int a, int b)
+int is_relevant(int a, int b) // a > b
 {
-    if (a == 0)
-        return b;
-    if (b == 0)
-        return a;
-    if (a == b)
-        return a;
-    if (a > b)
-        return gcd(a - b, b);
-    return gcd(a, b - a);
+    int temp;
+    while (b != 0)
+    {
+        temp = a % b;
+        a = b;
+        b = temp;
+    }
+    return a > 1;
 }
 
 // find articulation points (tarjan's algo)
-void findAPs(unsigned int u, int visited[], unsigned int discovery[], unsigned int low[], unsigned int *time, unsigned int last, int isAP[])
+void find_APs(unsigned int u, int visited[], unsigned int discovery[], unsigned int low[], unsigned int *time, unsigned int last, int isAP[])
 {
     unsigned int children = 0;
     visited[u] = 1;
@@ -35,7 +34,7 @@ void findAPs(unsigned int u, int visited[], unsigned int discovery[], unsigned i
         if (!visited[v])
         {
             ++children;
-            findAPs(v, visited, discovery, low, time, u, isAP);
+            find_APs(v, visited, discovery, low, time, u, isAP);
             low[u] = min(low[u], low[v]);
             if (last != -1 && low[v] >= discovery[u])
             {
@@ -55,7 +54,6 @@ void findAPs(unsigned int u, int visited[], unsigned int discovery[], unsigned i
 
 void solve()
 {
-    memset(hash, 0, sizeof(hash));
     memset(adj, 0, sizeof(adj));
     memset(adjlist, 0, sizeof(adjlist));
     scanf("%u", &n);
@@ -63,14 +61,13 @@ void solve()
     {
         unsigned int id = 0;
         scanf("%u", &id);
-        hash[id] = 1;
         ids[i] = id;
     }
     for (unsigned int i = 0; i < n; i++)
     {
         for (unsigned int j = i + 1; j < n; j++)
         {
-            if (gcd(ids[i], ids[j]) > 1)
+            if (is_relevant(ids[i], ids[j]))
             {
                 adj[i][j] = adj[j][i] = 1;
                 adjlist[i][adjlist[i][1001]++] = j;
@@ -85,7 +82,7 @@ void solve()
     {
         if (visited[i])
             continue;
-        findAPs(i, visited, discovery, low, &time, -1, isAP);
+        find_APs(i, visited, discovery, low, &time, -1, isAP);
     }
     unsigned int aps = 0;
     for (unsigned int i = 0; i < n; i++)
