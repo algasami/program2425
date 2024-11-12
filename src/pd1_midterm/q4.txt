@@ -1,0 +1,10 @@
+[10] When we use printf(…) function, why the “#include <stdio.h>” is needed and where, in the
+LINUX file system, you can locate file stdio.h? And Explain the differences between #include
+<my_file.h> and #include “my_file.h”
+
+A: #include <stdio.h> is a way for the compiler to directly copy and paste the content of the header file into where
+the macro is. This process is called macro expansion. As for the reason, it's because we need to tell the compiler
+the symbol of the printf(...) is the same as the one implemented by the standard I/O source files (.c).
+The different between <> and "" is that the former is prefered for global or external headers, while the latter is
+for local, relatively-positioned headers. Nowadays, it's mostly personal preference since these two work pretty much
+the same.
