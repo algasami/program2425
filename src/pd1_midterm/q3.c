@@ -50,18 +50,32 @@ void combine_longs()
 	output_ll(b);
 }
 
+// 2 bytes
+void output_hex(unsigned short n)
+{
+	char s[5];
+	for (int i = 3; i >= 0; i--, n /= 16)
+	{
+		int x = n % 16;
+		s[i] = x < 10 ? x + '0' : x - 10 + 'A';
+	}
+	s[4] = '\0';
+	printf("%s", s);
+}
+
 void output_ll(long long x)
 {
-	short results[8];
+	unsigned short results[8];
 	for (int i = 0; i < 8; i++)
 	{
 		results[8 - i - 1] = x % TWO_POW16;
 		x /= TWO_POW16;
 	}
-	printf("%.4x", results[0]);
+	output_hex(results[0]);
 	for (int i = 1; i < 8; i++)
 	{
-		printf(":%.4x", results[i]);
+		putchar(':');
+		output_hex(results[i]);
 	}
 }
 
