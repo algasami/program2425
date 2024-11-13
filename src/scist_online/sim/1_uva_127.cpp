@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 
-#define DEBUG
+// #define DEBUG
 using namespace std;
 
 list<stack<string>> piles;
@@ -47,8 +47,11 @@ int update()
 					if (target_iter->empty())
 					{
 						piles.erase(target_iter);
-						target_iter = iter;
 					}
+					target_iter = iter != piles.begin() ? prev(iter) : iter;
+					// we want to count for chain reaction due to moving to the stack
+					// but also need to account for the beginning of the array
+					// doing prev() because in the next for loop this would get overwritten
 					updated = 1;
 #ifdef DEBUG
 					pt_piles();
@@ -73,10 +76,9 @@ int solve()
 			return 1;
 		}
 		piles.push_back(stack<string>({str}));
+		update();
 	}
-	while (update())
-		;
-	cout << piles.size() << " pile" << (piles.size() > 1 ? "s" : "") << " remaining: ";
+	cout << piles.size() << " pile" << (piles.size() > 1 ? "s" : "") << " remaining:";
 	for (const auto &stk : piles)
 	{
 		cout << ' ' << stk.size();
