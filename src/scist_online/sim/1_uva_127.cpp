@@ -1,18 +1,37 @@
 #include <bits/stdc++.h>
 
-// #define DEBUG
+#define DEBUG
 using namespace std;
 
 list<stack<string>> piles;
 
+#ifdef DEBUG
+void pt_piles()
+{
+	cout << "Piles:";
+	for (const auto &stk : piles)
+	{
+		cout << ' ' << stk.top() << '(' << stk.size() << ')';
+	}
+	cout << '\n';
+}
+
+#endif
+
 int update()
 {
-	int idx = 1, updated = 0;
-	for (auto target_iter = next(piles.begin()); target_iter != piles.end(); target_iter++, idx++)
+	int updated = 0;
+	for (auto target_iter = next(piles.begin()); target_iter != piles.end(); target_iter++)
 	{
 		const string &target = target_iter->top();
-		int dist = min(idx, 3);
-		for (auto iter = prev(target_iter, dist); iter != target_iter; iter++, dist--)
+		auto iter = target_iter;
+		int dist = 0;
+		do
+		{
+			iter = prev(iter);
+			++dist;
+		} while (iter != piles.begin() && dist < 3);
+		for (; iter != target_iter; iter++, dist--)
 		{
 			if (dist == 1 || dist == 3)
 			{
@@ -20,16 +39,20 @@ int update()
 				if (tp[0] == target[0] || tp[1] == target[1])
 				{
 #ifdef DEBUG
+					pt_piles();
 					cout << "[MERGE] " << target << " to " << tp << '\n';
 #endif
 					iter->push(target);
 					target_iter->pop();
 					if (target_iter->empty())
 					{
-						target_iter = prev(piles.erase(target_iter));
-						idx -= 1;
+						piles.erase(target_iter);
+						target_iter = iter;
 					}
 					updated = 1;
+#ifdef DEBUG
+					pt_piles();
+#endif
 					break;
 				}
 			}
@@ -50,8 +73,6 @@ int solve()
 			return 1;
 		}
 		piles.push_back(stack<string>({str}));
-		while (update())
-			;
 	}
 	while (update())
 		;
