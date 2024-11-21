@@ -15,6 +15,11 @@ using namespace std;
 
 // even: alice wins
 // odd: bob wins
+// since we can see that no matter where we cut the branch
+// the result is still the same (-1 connection)
+// as long as there's connection on the round, you can cut the branch
+// even: start with odd connection, so alice can severe the last connection
+// odd: start with even connection, so bob can severe the last connection
 // TODO: mathematical proof
 
 int main()
