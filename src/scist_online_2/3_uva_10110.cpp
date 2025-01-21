@@ -3,7 +3,6 @@ using namespace std;
 
 int main()
 {
-    map<unsigned int, int> bkt;
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
@@ -16,33 +15,15 @@ int main()
         {
             break;
         }
-        int odd = 0;
-        unsigned int i = 1;
-        unsigned int sn = sqrt(N);
-        for (auto iter = bkt.rbegin(); iter != bkt.rend(); iter++)
+        // a perfect square number's distinct factors must be divisible by 2
+        unsigned int st = round(sqrt(N));
+        if (st * st == N)
         {
-            if (iter->first < sn)
-            {
-                i = iter->first + 1;
-                odd = iter->second;
-                break;
-            }
-        }
-        for (; i <= sn; i++)
-        {
-            if (N % i == 0)
-            {
-                odd = !odd;
-            }
-        }
-        bkt[N] = odd;
-        if (odd)
-        {
-            cout << "no\n";
+            cout << "yes\n";
         }
         else
         {
-            cout << "yes\n";
+            cout << "no\n";
         }
     }
     return 0;
