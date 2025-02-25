@@ -18,7 +18,7 @@ int main()
         int x;
         cin >> x;
         ++counts[x];
-        elems.insert(x);
+        elems.insert(x); // set<int> auto-sorts
     }
 
     int i0 = -1, i1 = -1, biggest = 0;
@@ -27,18 +27,20 @@ int main()
         if (i0 == -1)
         {
             i0 = x;
-            biggest = counts[x]; // initiate
+            biggest = counts[x]; // base scenario
         }
         else if (i1 == -1)
         {
             i1 = x;
             int possible;
-            if (i1 - i0 == 1)
+            if (i1 - i0 == 1) // calculate here first since we won't come back after initializing
             {
+                // ..., x, x+1, ...
                 possible = counts[i1] + counts[i0];
             }
             else
             {
+                // ..., x, x, x, ...
                 possible = counts[i1];
             }
             if (possible > biggest)
@@ -54,7 +56,7 @@ int main()
         int d0 = i1 - i0;
         int d1 = x - i1;
         int possible = 0;
-        if (d1 == 1 && d0 == 1)
+        if (d1 == 1 && d0 == 1) // ..., x-1, x, x+1, ...
         {
             possible = counts[x] + counts[i1] + counts[i0];
         }
@@ -62,7 +64,8 @@ int main()
         // {
         //     possible = counts[i1] + counts[i0];
         // }
-        else if (d1 == 1)
+        // ^ Gist: ..., x-1, x, ... is the same as ..., x, x+1, ...
+        else if (d1 == 1) // ..., x, x+1, ...
         {
             possible = counts[x] + counts[i1];
         }
@@ -79,9 +82,5 @@ int main()
     }
 
     cout << biggest << '\n';
-
-    // notice the monotonic property of the array
-    // array can never be empty
-
     return 0;
 }
