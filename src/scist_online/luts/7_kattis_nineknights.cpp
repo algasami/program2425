@@ -44,6 +44,7 @@ int main()
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+    int total = 0;
 
     for (int i = 0; i < SZ; i++)
     {
@@ -59,8 +60,14 @@ int main()
                 cout << "invalid\n";
                 return 0;
             }
+            ++total;
         }
         cin.get(); // flush newline
+    }
+    if (total != 9)
+    {
+        cout << "invalid\n";
+        return 0;
     }
     cout << "valid\n";
 
