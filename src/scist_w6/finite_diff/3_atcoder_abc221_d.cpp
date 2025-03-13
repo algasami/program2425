@@ -2,9 +2,9 @@
 #define DEBUG
 using namespace std;
 
-map<long long, long long> mp;
+map<int, int> mp;
 
-long long days[200001];
+int days[200005];
 
 int main()
 {
@@ -17,21 +17,20 @@ int main()
 
     for (int i = 0; i < n; i++)
     {
-        long long a, b;
+        int a, b;
         cin >> a >> b;
 
         ++mp[a];
         --mp[a + b];
     }
 
-    long long accu = 0;
-    long long last = 0;
+    int accu = 0;
+    int last = 0;
     for (auto const &p : mp)
     {
 
-        accu += p.second;
-
         days[accu] += (p.first - last);
+        accu += p.second;
         // cout << "t: " << p.first << ' ' << accu << '\n';
         last = p.first;
     }
