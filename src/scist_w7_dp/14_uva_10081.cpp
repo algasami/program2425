@@ -13,7 +13,7 @@ int solve()
 
     if (k <= 1)
     {
-        cout << "1.00000\n";
+        cout << "100.00000\n";
         return 1;
     }
 
@@ -43,10 +43,19 @@ int solve()
         sums += tiles[n - 1][j];
     }
 
-    double total_log = static_cast<double>(n) * log10(static_cast<double>(k + 1));
-    double tight_log = log10(static_cast<double>(sums));
+    // use iterate because denominator is large and the numerator is small
+    double res = static_cast<double>(sums) * 100.0;
+    for (int i = 0; i < n; i++)
+    {
+        res /= static_cast<double>(k + 1);
+    }
+    res = round(res * 100000.0) / 100000.0;
+    if (res == 0.0)
+    {
+        res = 0.0;
+    }
 
-    cout << fixed << setprecision(5) << 100.0 * pow(10.0, tight_log - total_log) << '\n';
+    cout << fixed << setprecision(5) << res << '\n';
     return 1;
 }
 
