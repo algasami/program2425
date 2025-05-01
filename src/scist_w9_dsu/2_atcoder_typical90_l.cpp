@@ -2,15 +2,17 @@
 #define DEBUG
 using namespace std;
 
-typedef pair<int, int> coord;
-
+int h, w, q;
 int colors[2002][2002] = {};
 
-map<coord, coord> parents;
-// use map bc unordered_map is not guaranteed to be
-// fast at serialized data
+int parents[4000004];
 
-coord find_root(coord const &from)
+int get_id(int i, int j)
+{
+    return i * w + j;
+}
+
+int find_root(int from)
 {
     if (parents[from] == from)
     {
@@ -19,10 +21,10 @@ coord find_root(coord const &from)
     return parents[from] = find_root(parents[from]);
 }
 
-void union_grid(coord const &a, coord const &b)
+void union_grid(int a, int b)
 {
-    coord r1 = find_root(a);
-    coord r2 = find_root(b);
+    int r1 = find_root(a);
+    int r2 = find_root(b);
     if (r1 == r2)
     {
         return;
@@ -30,7 +32,6 @@ void union_grid(coord const &a, coord const &b)
     parents[r1] = r2;
 }
 
-int h, w, q;
 int main()
 {
     ios_base::sync_with_stdio(false);
@@ -44,8 +45,8 @@ int main()
     for (int i = 1; i <= h; i++)
         for (int j = 1; j <= w; j++)
         {
-            coord cd = make_pair(i, j);
-            parents[cd] = cd;
+            int id = get_id(i, j);
+            parents[id] = id;
         }
 
     for (int i = 0; i < q; i++)
@@ -57,22 +58,22 @@ int main()
             int i, j;
             cin >> i >> j;
             colors[i][j] = 1; // i >= 1, j>=1 so no OOB issue
-            coord c = make_pair(i, j);
+            int c = get_id(i, j);
             if (colors[i - 1][j])
             {
-                union_grid(c, make_pair(i - 1, j));
+                union_grid(c, get_id(i - 1, j));
             }
             if (colors[i][j - 1])
             {
-                union_grid(c, make_pair(i, j - 1));
+                union_grid(c, get_id(i, j - 1));
             }
             if (colors[i + 1][j])
             {
-                union_grid(c, make_pair(i + 1, j));
+                union_grid(c, get_id(i + 1, j));
             }
             if (colors[i][j + 1])
             {
-                union_grid(c, make_pair(i, j + 1));
+                union_grid(c, get_id(i, j + 1));
             }
         }
         else if (t == 2)
@@ -84,8 +85,7 @@ int main()
                 cout << "No\n";
                 continue;
             }
-            cout << (find_root(make_pair(ai, aj)) == find_root(make_pair(bi, bj)) ? "Yes\n"
-                                                                                  : "No\n");
+            cout << (find_root(get_id(ai, aj)) == find_root(get_id(bi, bj)) ? "Yes\n" : "No\n");
         }
     }
 
